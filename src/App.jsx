@@ -317,6 +317,12 @@ export default function App() {
                     )}
                 </div>
             </main>
+            
+            {/* --- NEW FOOTER --- */}
+            <footer className="text-center p-4 text-xs text-gray-600/80">
+                <p>Created by Chukwuma I. Onyeije, MD, FACOG</p>
+                <p>Atlanta Perinatal Associates</p>
+            </footer>
         </div>
     );
 }
