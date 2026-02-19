@@ -2,14 +2,14 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
-// Your web app's Firebase configuration
+// Your web app's Firebase configuration (loaded from environment variables)
 const firebaseConfig = {
-  apiKey: "AIzaSyC50NmIJECWpNlHsvfaWK3K_wFfL--9b-I",
-  authDomain: "gdm-quiz-app.firebaseapp.com",
-  projectId: "gdm-quiz-app",
-  storageBucket: "gdm-quiz-app.firebasestorage.app",
-  messagingSenderId: "1087857340628",
-  appId: "1:1087857340628:web:20319727d4e4ff5ca34b41"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Initialize Firebase
