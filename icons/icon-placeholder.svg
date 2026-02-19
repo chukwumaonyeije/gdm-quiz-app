@@ -1,0 +1,15 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#0ea5e9" rx="64"/>
+  
+  <!-- Medical Cross -->
+  <rect x="216" y="128" width="80" height="256" fill="white" rx="8"/>
+  <rect x="128" y="216" width="256" height="80" fill="white" rx="8"/>
+  
+  <!-- Heart accent -->
+  <path d="M 256 340 C 256 340 192 300 192 260 C 192 240 204 228 220 228 C 232 228 244 236 256 248 C 268 236 280 228 292 228 C 308 228 320 240 320 260 C 320 300 256 340 256 340 Z" fill="#ec4899" opacity="0.8"/>
+  
+  <!-- Quiz bubble -->
+  <circle cx="384" cy="128" r="48" fill="white"/>
+  <text x="384" y="145" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#0ea5e9" text-anchor="middle">?</text>
+</svg>
