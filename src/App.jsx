@@ -6,20 +6,9 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 
 // --- Component Imports ---
 import LoginPage from './LoginPage';
+import { BotIcon, UserIcon } from '@/components/icons';
 
 // --- GdmQuiz Component ---
-const BotIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-600">
-        <path d="M12 8V4H8" /><rect x="4" y="12" width="16" height="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 12v-2a3 3 0 0 0-3-3H9" />
-    </svg>
-);
-
-const UserIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
-    </svg>
-);
-
 function GdmQuiz({ handleLogout, user }) {
     const [messages, setMessages] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
