@@ -8,91 +8,140 @@ import {
   signInWithEmailAndPassword 
 } from "firebase/auth";
 import { GoogleIcon, GithubIcon } from '@/components/icons';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isSigningUp, setIsSigningUp] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSocialLogin = (provider) => {
-        signInWithPopup(auth, provider).catch((err) => {
+    const handleSocialLogin = async (provider) => {
+        try {
+            setIsLoading(true);
+            setError('');
+            await signInWithPopup(auth, provider);
+        } catch (err) {
             setError(err.message);
-        });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    const handleEmailAuth = (e) => {
+    const handleEmailAuth = async (e) => {
         e.preventDefault();
         setError('');
-        if (isSigningUp) {
-            // Sign up
-            createUserWithEmailAndPassword(auth, email, password)
-                .catch((err) => setError(err.message));
-        } else {
-            // Sign in
-            signInWithEmailAndPassword(auth, email, password)
-                .catch((err) => setError(err.message));
+        setIsLoading(true);
+        
+        try {
+            if (isSigningUp) {
+                await createUserWithEmailAndPassword(auth, email, password);
+            } else {
+                await signInWithEmailAndPassword(auth, email, password);
+            }
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 p-4">
-            <div className="w-full max-w-md bg-white/50 backdrop-blur-lg rounded-2xl shadow-xl p-8 space-y-6">
-                <div>
-                    <h2 className="text-center text-3xl font-bold text-gray-800">
+            <Card className="w-full max-w-md bg-white/90 backdrop-blur-lg">
+                <CardHeader className="text-center">
+                    <CardTitle className="text-3xl">
                         {isSigningUp ? 'Create an Account' : 'Sign in to Your Account'}
-                    </h2>
-                    <p className="mt-2 text-center text-sm text-gray-600">
+                    </CardTitle>
+                    <CardDescription>
                         to save your quiz progress
+                    </CardDescription>
+                </CardHeader>
+
+                <CardContent className="space-y-6">
+                    {error && (
+                        <div className="bg-destructive/10 text-destructive p-3 rounded-lg text-sm" role="alert">
+                            {error}
+                        </div>
+                    )}
+
+                    <div className="space-y-3">
+                        <Button
+                            onClick={() => handleSocialLogin(new GoogleAuthProvider())}
+                            variant="outline"
+                            size="touch"
+                            className="w-full"
+                            disabled={isLoading}
+                        >
+                            <GoogleIcon />
+                            Sign in with Google
+                        </Button>
+                        <Button
+                            onClick={() => handleSocialLogin(new GithubAuthProvider())}
+                            variant="outline"
+                            size="touch"
+                            className="w-full bg-gray-900 text-white hover:bg-gray-800"
+                            disabled={isLoading}
+                        >
+                            <GithubIcon />
+                            Sign in with GitHub
+                        </Button>
+                    </div>
+
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                        </div>
+                    </div>
+
+                    <form className="space-y-4" onSubmit={handleEmailAuth}>
+                        <Input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Email address"
+                            required
+                            disabled={isLoading}
+                            aria-label="Email address"
+                        />
+                        <Input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Password"
+                            required
+                            disabled={isLoading}
+                            aria-label="Password"
+                        />
+                        <Button
+                            type="submit"
+                            size="touch"
+                            className="w-full"
+                            disabled={isLoading}
+                        >
+                            {isLoading ? 'Loading...' : (isSigningUp ? 'Sign Up' : 'Sign In')}
+                        </Button>
+                    </form>
+
+                    <p className="text-center text-sm text-muted-foreground">
+                        {isSigningUp ? 'Already have an account?' : "Don't have an account?"}
+                        <Button
+                            variant="link"
+                            onClick={() => setIsSigningUp(!isSigningUp)}
+                            className="ml-1 p-0 h-auto font-medium"
+                            disabled={isLoading}
+                        >
+                            {isSigningUp ? 'Sign In' : 'Sign Up'}
+                        </Button>
                     </p>
-                </div>
-
-                {error && <p className="bg-red-100 text-red-700 p-3 rounded-lg text-sm">{error}</p>}
-
-                <div className="space-y-4">
-                    <button onClick={() => handleSocialLogin(new GoogleAuthProvider())} className="w-full flex items-center justify-center py-2.5 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-700 hover:bg-gray-50 transition-all duration-200">
-                        <GoogleIcon />
-                        Sign in with Google
-                    </button>
-                    <button onClick={() => handleSocialLogin(new GithubAuthProvider())} className="w-full flex items-center justify-center py-2.5 px-4 border border-gray-300 rounded-lg shadow-sm bg-gray-800 text-white hover:bg-gray-900 transition-all duration-200">
-                        <GithubIcon />
-                        Sign in with GitHub
-                    </button>
-                </div>
-
-                <div className="relative flex py-3 items-center">
-                    <div className="flex-grow border-t border-gray-300"></div>
-                    <span className="flex-shrink mx-4 text-gray-500">Or continue with</span>
-                    <div className="flex-grow border-t border-gray-300"></div>
-                </div>
-
-                <form className="space-y-6" onSubmit={handleEmailAuth}>
-                    <input 
-                        type="email" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Email address"
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                    <input 
-                        type="password" 
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password"
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                    <button type="submit" className="w-full py-3 px-4 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-lg transform hover:scale-105 transition-all duration-200">
-                        {isSigningUp ? 'Sign Up' : 'Sign In'}
-                    </button>
-                </form>
-
-                <p className="text-center text-sm text-gray-600">
-                    {isSigningUp ? 'Already have an account?' : "Don't have an account?"}
-                    <button onClick={() => setIsSigningUp(!isSigningUp)} className="font-medium text-indigo-600 hover:text-indigo-500 ml-1">
-                        {isSigningUp ? 'Sign In' : 'Sign Up'}
-                    </button>
-                </p>
-            </div>
-        </d
+                </CardContent>
+            </Card>
+        </div>
+    );
+}
